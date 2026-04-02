@@ -1,0 +1,27 @@
+{
+  "name": "w24-orchestrator",
+  "version": "0.2.0",
+  "description": "W24 Orchestrator — Multi-tenant OC process manager",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "provision": "tsx src/cli/provision.ts"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.0",
+    "dotenv": "^16.4.0",
+    "express": "^5.1.0",
+    "node-telegram-bot-api": "^0.66.0",
+    "tree-kill": "^1.2.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.0.0",
+    "@types/node-telegram-bot-api": "^0.64.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}
