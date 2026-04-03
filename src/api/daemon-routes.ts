@@ -33,8 +33,9 @@ daemonRouter.get('/connections', (_req: Request, res: Response) => {
  * GET /api/daemon/status/:tenantId — Check if daemon is connected
  */
 daemonRouter.get('/status/:tenantId', (req: Request, res: Response) => {
-  const connected = isDaemonConnected(req.params.tenantId)
-  res.json({ tenantId: req.params.tenantId, connected })
+  const tenantId = req.params.tenantId as string
+  const connected = isDaemonConnected(tenantId)
+  res.json({ tenantId, connected })
 })
 
 /**
