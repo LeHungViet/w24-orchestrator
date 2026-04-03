@@ -7,24 +7,34 @@
 
 import 'dotenv/config'
 import express from 'express'
+import { createServer } from 'http'
 import { config } from './config.js'
 import { router } from './api/routes.js'
+import { daemonRouter } from './api/daemon-routes.js'
 import { suspendIdleInstances } from './core/instance-manager.js'
 import { startAllBotProxies, stopAllBotProxies } from './telegram/proxy.js'
+import { initDaemonWSS } from './daemon/ws-handler.js'
 
 const app = express()
 app.use(express.json())
 
 // Mount API routes
 app.use('/api', router)
+app.use('/api/daemon', daemonRouter)
 
 // Public health endpoint (no auth)
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok', service: 'w24-orchestrator', uptime: Math.round(process.uptime()) })
 })
 
+// Create HTTP server (needed for WSS upgrade)
+const httpServer = createServer(app)
+
+// Initialize Daemon WebSocket server
+initDaemonWSS(httpServer)
+
 // Start server
-const server = app.listen(config.port, () => {
+const server = httpServer.listen(config.port, () => {
   console.log(`
 ╔══════════════════════════════════════════════════╗
 ║        W24 Orchestrator v0.2.0                   ║
@@ -60,7 +70,7 @@ async function shutdown(signal: string) {
   console.log(`\n[MAIN] ${signal} received — shutting down...`)
   clearInterval(suspendInterval)
   stopAllBotProxies()
-  server.close()
+  httpServer.close()
   process.exit(0)
 }
 
