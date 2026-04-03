@@ -21,7 +21,7 @@ RUN npm ci --omit=dev
 # Copy source and build
 COPY tsconfig.json ./
 COPY src/ ./src/
-RUN npm install -D typescript @types/node @types/express @types/node-telegram-bot-api && npm run build
+RUN npm install -D typescript @types/node @types/express @types/node-telegram-bot-api @types/ws && npm run build
 
 # Create tenants directory (Railway volume will mount here)
 RUN mkdir -p /data/w24-tenants
